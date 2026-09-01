@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "nplusone.ext.django",
     "auditlog",
+    "core",
     "drf_spectacular",
 ]
 
