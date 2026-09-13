@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "auditlog",
     "core",
     "accounts",
+    "users",
     "drf_spectacular",
 ]
 
