@@ -45,16 +45,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "nplusone.ext.django",
     "auditlog",
+    "nplusone.ext.django",
     "core",
     "accounts",
     "users",
+    "events",
     "drf_spectacular",
 ]
 
 MIDDLEWARE = [
-    "nplusone.ext.django.NPlusOneMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "auditlog.middleware.AuditlogMiddleware",
+    "nplusone.ext.django.NPlusOneMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
