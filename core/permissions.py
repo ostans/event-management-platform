@@ -46,3 +46,16 @@ class IsEventOwner(BasePermission):
         if hasattr(obj, "stage_id"):
             return obj.stage.event
         return None
+
+
+class IsParticipant(BasePermission):
+    message = "You must be the participant to perform this action."
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user and request.user.is_authenticated and getattr(request.user, "role", None) == "participant"
+        )
+
+    def has_object_permission(self, request, view, obj):
+        return getattr(obj, "participant_id", None) == request.user.id
+

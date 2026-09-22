@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "users",
     "events",
     "attributes",
+    "registrations",
     "drf_spectacular",
 ]
 
