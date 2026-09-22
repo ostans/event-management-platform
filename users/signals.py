@@ -10,12 +10,12 @@ def create_user_profile(sender, instance, created, **kwargs):
     full_name = f"{instance.first_name} {instance.last_name}".strip()
 
     if created:
-        if instance.user.role == "participant":
-            ParticipantProfile.objects.create(user=instance)
-        if instance.user.role == "organizer":
-            OrganizerProfile.objects.create(user=instance)
+        if instance.role == "participant":
+            ParticipantProfile.objects.create(user=instance, full_name=full_name)
+        elif instance.role == "organizer":
+            OrganizerProfile.objects.create(user=instance, full_name=full_name)
     else:
-        if instance.user.role == "participant":
+        if instance.role == "participant":
             ParticipantProfile.objects.update_or_create(user=instance, defaults={"full_name": full_name})
-        if instance.user.role == "organizer":
+        elif instance.role == "organizer":
             OrganizerProfile.objects.update_or_create(user=instance, defaults={"full_name": full_name})
