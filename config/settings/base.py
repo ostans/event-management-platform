@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "events",
     "attributes",
     "registrations",
+    "results",
     "drf_spectacular",
 ]
 
