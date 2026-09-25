@@ -5,7 +5,6 @@ from django.contrib.auth.models import (
 )
 from django.core.validators import RegexValidator
 from django.db import models
-from django.utils import timezone
 
 phone_regex = RegexValidator(
     regex=r"^\+989\d{9}$",
@@ -19,7 +18,7 @@ class CustomUserManager(BaseUserManager):
         first_name = extra_fields.get("first_name")
         last_name = extra_fields.get("last_name")
         if not phone_number:
-            raise ValueError("The E field must be set")
+            raise ValueError("The Phone Number field must be set")
         if not first_name or not last_name:
             raise ValueError("The Fullname fiel must be set")
         user = self.model(phone_number=phone_number, **extra_fields)
@@ -55,8 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         STAFF = "staff", "Staff"
 
     phone_number = models.CharField(max_length=13, unique=True, validators=[phone_regex])
-    first_name = models.CharField()
-    last_name = models.CharField()
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     role = models.CharField(max_length=11, choices=Role.choices, default=Role.PARTICIPANT)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
