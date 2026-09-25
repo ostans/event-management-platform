@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "auditlog",
-    "nplusone.ext.django",
     "core",
     "accounts",
     "users",
@@ -66,7 +65,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "auditlog.middleware.AuditlogMiddleware",
-    "nplusone.ext.django.NPlusOneMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -168,10 +166,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
-# NPlusOne settings
-NPLUSONE_RAISE = False
-NPLUSONE_LOGGER = logging.getLogger("nplusone")
-NPLUSONE_LOG_LEVEL = logging.WARN
 
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 CELERY_ACCEPT_CONTENT = ["json"]

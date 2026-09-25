@@ -31,12 +31,12 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("accounts.urls")),
-    path("users/", include("users.urls")),
-    path("events/", include("events.urls")),
-    path("attributes/", include("attributes.urls")),
-    path("registrations/", include("registrations.urls")),
-    path("results/", include("results.urls")),
+    path("api/", include("accounts.urls")),
+    path("api/", include("users.urls")),
+    path("api/", include("events.urls")),
+    path("api/", include("attributes.urls")),
+    path("api/", include("registrations.urls")),
+    path("api/", include("results.urls")),
     path("api-auth/", include("rest_framework.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
