@@ -1,212 +1,167 @@
 <div align="center">
 
-# 🚀 Event-Planet
+# 🚀 Event Management Platform
 
-A modern Django REST API for managing the full lifecycle of events — from planning and registration to stage operations, results, and feedback.
+A modular Django REST API for managing the full event lifecycle — from organizer planning and stage management to participant registration, result publishing, and feedback collection.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-6.1-092E20?style=for-the-badge&logo=django&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![DRF](https://img.shields.io/badge/DRF-REST%20API-FF1709?style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![DRF](https://img.shields.io/badge/Django%20REST-API-FF1709?style=for-the-badge)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Overview
 
-- 🎯 **Event lifecycle management** — create, publish, close, and finish events with validation rules.
-- 🧑‍🤝‍🧑 **User and role management** — custom phone-based authentication with organizer, participant, and staff roles.
-- 🏟️ **Stage-based scheduling** — manage stages, order them, assign guests, and track capacity.
-- 📝 **Dynamic attributes** — attach typed custom attributes to different event types.
-- 🎟️ **Registration system** — handle event-level and stage-level registrations with strict validation.
-- 📊 **Results and rankings** — publish results with rank or score data after an event is completed.
-- 💬 **Feedback collection** — gather participant ratings and comments after finished events.
-- 🔐 **Secure APIs** — JWT authentication, throttling, schema generation, and API docs.
-- 📚 **Admin-ready platform** — integrated admin dashboard and OpenAPI documentation via Swagger/Redoc.
+This project is built as a Django monolith with a REST API layer and multiple domain modules. It supports:
+
+- Event creation and lifecycle management
+- Organizer and participant roles
+- Public and organizer-only views
+- Stage and assignment management
+- Event attribute metadata
+- Registration workflows
+- Result publishing and feedback collection
+- JWT-based authentication and OpenAPI schema generation
 
 ---
 
 ## 🧱 Tech Stack
 
-| Layer         | Technology            |
-| ------------- | --------------------- |
-| Language      | Python 3.10+          |
-| Framework     | Django 6.1            |
-| API           | Django REST Framework |
-| Auth          | JWT (Simple JWT)      |
-| Database      | PostgreSQL            |
-| Cache / queue | Redis + Celery        |
-| Docs          | drf-spectacular       |
-| Admin         | django-unfold         |
-| Audit         | django-auditlog       |
+| Layer            | Technology            |
+| ---------------- | --------------------- |
+| Language         | Python 3.10+          |
+| Framework        | Django 6.1            |
+| API              | Django REST Framework |
+| Auth             | Simple JWT            |
+| Database         | PostgreSQL            |
+| Background tasks | Celery + Redis        |
+| API docs         | drf-spectacular       |
+| Admin UI         | django-unfold         |
+| Audit trail      | django-auditlog       |
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ Setup
 
-### 1. Prerequisites
+### Prerequisites
 
 - Python 3.10+
-- PostgreSQL installed and running
-- Redis installed and running
-- Virtual environment support (`venv` / `virtualenv`)
+- PostgreSQL 15+
+- Redis
+- virtualenv / venv
+- Docker and Docker Compose (optional, for containerized setup)
 
-### 2. Clone the repository
+### 1. Clone repository
 
 ```bash
-git clone https://github.com/ostans/event-management-platform.git
+git clone <repo-url>
 cd event-management-platform
 ```
 
-### 3. Create and activate a virtual environment
+### 2. Create and activate virtual environment
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-# .venv\Scripts\activate   # Windows
 ```
 
-### 4. Install dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure environment variables
+### 4. Configure environment variables
 
-Create a `.env` file in the project root:
+Create a `.env` file:
 
 ```env
-SECRET_KEY=your-secret-key
+SECRET_KEY=replace-with-strong-secret
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
-NAME=event_planet
-PGUSER=postgres
-PASSWORD=postgres
-HOST=localhost
-PORT=5432
+DB_NAME=event_management
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
-> This project uses `python-decouple` to read the environment values from the settings configuration.
+> The project reads configuration from the Django settings package, including environment-sensitive files under `config/settings/`.
 
-### 6. Apply migrations
+### 5. Run database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 7. Create a superuser (optional)
-
-```bash
-python manage.py createsuperuser
-```
-
-### 8. Run the server
+### 6. Start the app
 
 ```bash
 python manage.py runserver
 ```
 
-Open the project in the browser:
+Then open:
 
-- http://127.0.0.1:8000/
-- Admin panel: http://127.0.0.1:8000/admin/
+- App: http://127.0.0.1:8000/
+- Admin: http://127.0.0.1:8000/admin/
+
+### Docker workflow
+
+```bash
+docker compose up --build
+```
+
+This project includes `docker-compose.yml`, `Dockerfile`, and `Dockerfile.nginx` for containerized local development.
 
 ---
 
-## 🗄️ Project Structure
+## 🗂️ Project Structure
 
 ```text
 .
-├── accounts/                  # Custom user model and auth APIs
-├── attributes/                # Dynamic event attributes and typed values
-├── config/                    # Django settings, URLs, ASGI/WSGI, Celery config
-├── core/                      # Shared base models and permissions
-├── events/                    # Events, stages, and stage assignments
-├── registrations/             # Event/stage registration logic
-├── results/                   # Results and feedback logic
-├── static/                    # Static files
-├── staticfiles/               # Collected static files
-├── users/                     # User-focused logic and APIs
-├── .gitignore
-├── manage.py
-├── requirements.txt
-├── README.md
+├── accounts/                 # Authentication, registration, JWT login/logout
+├── attributes/               # Shared attribute definitions and event attribute values
+├── config/                   # Django settings, URLs, Celery, and app config
+├── core/                     # Shared permissions, helpers, and common logic
+├── events/                   # Events, stages, stage assignments, and event metadata
+├── registrations/            # Participant registration logic for events/stages
+├── results/                  # Result publishing and participant feedback
+├── users/                    # Profiles and audit log endpoints
+├── static/                   # Static files
+├── staticfiles/              # Collected static output
+├── manage.py                 # Django management entry point
+├── requirements.txt          # Python dependencies
+├── docker-compose.yml        # Local development services
+├── Dockerfile                # App container
+├── Dockerfile.nginx          # Nginx container
+├── README.md                 # Project documentation
+├── .env.example              # Optional example env file
 └── ...
 ```
 
 ---
 
-## 🚀 API Overview
-
-The API is served under the `/api/` namespace.
-
-### Authentication
-
-| Endpoint              | Method | Description              |
-| --------------------- | ------ | ------------------------ |
-| `/api/auth/register/` | POST   | Register a new user      |
-| `/api/auth/login/`    | POST   | Login and get JWT tokens |
-| `/api/auth/refresh/`  | POST   | Refresh access token     |
-| `/api/auth/logout/`   | POST   | Logout user session      |
-| `/api/token/`         | POST   | Obtain JWT pair          |
-| `/api/token/refresh/` | POST   | Refresh JWT token        |
-
-### API Documentation
-
-- Schema: `/api/schema/`
-- Swagger UI: `/api/schema/swagger-ui/`
-- Redoc: `/api/schema/redoc/`
-
-### Main domain APIs
-
-- Event types and event management
-- Organizer event dashboards and nested stage endpoints
-- Registration endpoints for participants
-- Result and ranking APIs
-- Dynamic attribute endpoints by event type
-
----
-
-## 🧪 Development Workflow
-
-### Run tests
+## 🧪 Development Commands
 
 ```bash
 python manage.py test
-```
-
-### Create migrations
-
-```bash
 python manage.py makemigrations
-```
-
-### Apply migrations
-
-```bash
 python manage.py migrate
-```
-
-### Collect static files
-
-```bash
 python manage.py collectstatic
+python manage.py createsuperuser
 ```
 
----
-
-## 🔄 Celery & Redis
-
-This project includes Celery integration for background work and async processing. To run the worker locally:
+Celery worker:
 
 ```bash
 celery -A config worker -l info
 ```
 
-To run the scheduler:
+Celery beat:
 
 ```bash
 celery -A config beat -l info
@@ -214,73 +169,189 @@ celery -A config beat -l info
 
 ---
 
-## 🛡️ Validation & Business Rules
+## 📚 API Documentation
 
-The platform enforces several important rules:
+The API is mounted under the `/api/` namespace. OpenAPI schema is exposed through the Django REST Framework schema generator.
 
-- Event end time must be after start time
-- Registration scope must match the event configuration
-- Result publication is allowed only for finished events
-- Ratings must be between 1 and 5
-- Stage assignments must belong to the correct event
-- Attribute values must match the declared data type
+### Documentation routes
 
-These validations are enforced in the model layer to keep the data consistent and reliable.
+- Schema: `/api/schema/`
+- Swagger UI: `/api/schema/swagger-ui/`
+- Redoc UI: `/api/schema/redoc/`
+
+### Authentication
+
+All protected endpoints use JWT authentication via `Authorization: Bearer <token>`.
+
+| Endpoint              | Method | Access        | Description                             |
+| --------------------- | ------ | ------------- | --------------------------------------- |
+| `/api/auth/register/` | POST   | Public        | Register a new user                     |
+| `/api/auth/login/`    | POST   | Public        | Login and receive access/refresh tokens |
+| `/api/auth/refresh/`  | POST   | Public        | Refresh JWT access token                |
+| `/api/auth/logout/`   | POST   | Authenticated | Revoke the refresh token                |
+| `/api/token/`         | POST   | Public        | Obtain JWT pair                         |
+| `/api/token/refresh/` | POST   | Public        | Refresh access token                    |
+
+### User profiles and audit logs
+
+| Endpoint                     | Method                   | Access        | Description                 |
+| ---------------------------- | ------------------------ | ------------- | --------------------------- |
+| `/api/participant-profiles/` | GET, POST, PATCH, DELETE | Authenticated | Manage participant profiles |
+| `/api/organizer-profiles/`   | GET, POST, PATCH, DELETE | Authenticated | Manage organizer profiles   |
+| `/api/audit-logs/`           | GET                      | Authenticated | View audit history          |
+
+### Event catalog and organizer events
+
+| Endpoint                                                                          | Method                  | Access    | Description                |
+| --------------------------------------------------------------------------------- | ----------------------- | --------- | -------------------------- |
+| `/api/event-types/`                                                               | GET                     | Public    | Event type catalog         |
+| `/api/stage-role-types/`                                                          | GET                     | Public    | Stage role definitions     |
+| `/api/public/events/`                                                             | GET                     | Public    | Published events list      |
+| `/api/public/events/{event_pk}/`                                                  | GET                     | Public    | Published event detail     |
+| `/api/organizer/events/`                                                          | GET, POST               | Organizer | Organizer-owned events     |
+| `/api/organizer/events/{event_pk}/`                                               | GET, PUT, PATCH, DELETE | Organizer | Event detail/update/delete |
+| `/api/organizer/events/{event_pk}/stages/`                                        | GET, POST               | Organizer | Event stages               |
+| `/api/organizer/events/{event_pk}/stages/{stage_pk}/`                             | GET, PUT, PATCH, DELETE | Organizer | Stage detail/update/delete |
+| `/api/organizer/events/{event_pk}/stages/{stage_pk}/assignments/`                 | GET, POST               | Organizer | Stage assignments          |
+| `/api/organizer/events/{event_pk}/stages/{stage_pk}/assignments/{assignment_pk}/` | GET, PUT, PATCH, DELETE | Organizer | Assignment detail          |
+
+### Attributes
+
+| Endpoint                                             | Method                   | Access                               | Description                        |
+| ---------------------------------------------------- | ------------------------ | ------------------------------------ | ---------------------------------- |
+| `/api/attributes/`                                   | GET, POST, PATCH, DELETE | Public for read, Organizer for write | Shared attribute metadata          |
+| `/api/public/events/{event_pk}/attribute-values/`    | GET                      | Public                               | Published event attributes         |
+| `/api/organizer/events/{event_pk}/attribute-values/` | GET, POST                | Organizer                            | Organizer-managed event attributes |
+
+### Registrations
+
+| Endpoint                                          | Method    | Access      | Description                              |
+| ------------------------------------------------- | --------- | ----------- | ---------------------------------------- |
+| `/api/registrations/`                             | GET, POST | Participant | List/create participant registrations    |
+| `/api/registrations/{registration_pk}/`           | GET       | Participant | Registration detail                      |
+| `/api/registrations/{registration_pk}/cancel/`    | POST      | Participant | Cancel a registration                    |
+| `/api/organizer/events/{event_pk}/registrations/` | GET       | Organizer   | Registrations for organizer-owned events |
+
+### Results and feedback
+
+| Endpoint                                                     | Method                        | Access      | Description                                  |
+| ------------------------------------------------------------ | ----------------------------- | ----------- | -------------------------------------------- |
+| `/api/public/events/{event_pk}/results/`                     | GET                           | Public      | Published results for an event               |
+| `/api/organizer/events/{event_pk}/results/`                  | GET, POST, PUT, PATCH, DELETE | Organizer   | Manage event results                         |
+| `/api/organizer/events/{event_pk}/feedbacks/`                | GET                           | Organizer   | View feedback for an event                   |
+| `/api/participant/registrations/{registration_pk}/feedback/` | GET, POST                     | Participant | Read or submit feedback for own registration |
 
 ---
 
-## 📦 Environment Configuration
+## 🔐 API Usage Examples
 
-The settings are split by environment:
+### Login
 
-- `config/settings/base.py` — shared defaults
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone_number": "+1234567890",
+    "password": "secret123"
+  }'
+```
+
+### Create event (authenticated organizer)
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/organizer/events/ \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Summer Festival 2026",
+    "description": "Annual event",
+    "event_type": 1,
+    "start_time": "2026-07-10T10:00:00Z",
+    "end_time": "2026-07-10T18:00:00Z",
+    "status": "draft"
+  }'
+```
+
+### Register for an event
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/registrations/ \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": 1,
+    "stage": 2
+  }'
+```
+
+---
+
+## 🛡️ Business Rules
+
+The system enforces validation rules to keep the platform consistent:
+
+- Event end time must be later than the start time
+- Registration must match the event and permitted stage configuration
+- Results can only be published for completed events
+- Feedback ratings must be within the valid range
+- Stage assignments must belong to the correct event
+- Attribute values must match the declared attribute type
+
+---
+
+## 📦 Environment & Deployment
+
+The settings are separated by environment:
+
+- `config/settings/base.py` — shared configurations
 - `config/settings/dev.py` — local development settings
-- `config/settings/prod.py` — production deployment settings
+- `config/settings/prod.py` — production settings
 
-For production, make sure to configure:
+For production deployment, ensure:
 
-- strong `SECRET_KEY`
+- secure `SECRET_KEY`
 - `DEBUG=False`
 - valid `ALLOWED_HOSTS`
-- secure PostgreSQL and Redis connection settings
+- PostgreSQL and Redis connection settings are correct
+- static/media files are served properly
 
 ---
 
-## 🧭 Architecture Overview
+## 🧭 Architecture Summary
 
-The project follows a modular Django monolith pattern:
+The project follows a modular monolith pattern:
 
-- **accounts** — user identity, custom authentication, and profile-related logic
-- **users** — user-facing app logic and endpoints
-- **events** — event creation, stage scheduling, and assignment handling
-- **attributes** — typed metadata for events
-- **registrations** — participant enrollment logic
-- **results** — results, scores, ranks, and feedback
-- **core** — shared models and reusable rules
+- `accounts` — authentication, user creation, auth flows
+- `users` — profile and audit APIs
+- `events` — event lifecycle and stage management
+- `attributes` — reusable metadata definitions and values
+- `registrations` — participant actions and organizer visibility
+- `results` — result publication and feedback workflows
+- `core` — permissions and shared logic
 
-This separation makes the system easier to expand with new features such as payments, notifications, QR check-ins, analytics, and admin reporting.
-
----
-
-## 📄 License
-
-This project does not currently include a dedicated license file. If you plan to share or distribute the project publicly, it is recommended to add a license such as MIT or GPL.
+This structure keeps business logic separated while still remaining easy to run and maintain as a single Django application.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome. A typical workflow is:
+Contributions are welcome. Suggested workflow:
 
 1. Fork the repository
-2. Create a feature branch
-3. Implement and test your changes
-4. Open a pull request with a clear summary
+2. Create a branch for the change
+3. Implement and test the feature
+4. Commit cleanly and open a pull request
+
+---
+
+## 📄 License
+
+This project does not include a dedicated license file yet. If you plan to distribute it publicly, add an appropriate open-source license such as MIT.
 
 ---
 
 <div align="center">
 
-Built with Django and the Django REST Framework to power modern event management experiences.
+Built with Django and the Django REST Framework for modern event management systems.
 
 </div>
