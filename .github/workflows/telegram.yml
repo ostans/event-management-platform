@@ -14,16 +14,29 @@ jobs:
       BRANCH: ${{ github.ref_name || github.ref }}
       EVENT_NAME: ${{ github.event_name }}
       ACTOR: ${{ github.actor }}
-      HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message || "" }}
-      PR_TITLE: ${{ github.event.pull_request.title || "" }}
+      HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message || '' }}
+      PR_TITLE: ${{ github.event.pull_request.title || '' }}
     steps:
       - name: Send Telegram notification
-      - run: |
-          Message:"$HEAD_COMMIT_MESSAGE"
-          if [ -z "$Message" ]; then
-            Message="$PR_TITLE"
-          Text:" \U0001F4C1 *Github Update*\n 📁 Repo: [${REPO}]\n 🌿 Branch: [${BRANCH}] \n 📌 Event: [${EVENT_NAME}] \n 👤 Actor: [${ACTOR}] \n"
+        run: |
+          MESSAGE="${HEAD_COMMIT_MESSAGE}"
+          if [ -z "$MESSAGE" ]; then
+            MESSAGE="$PR_TITLE"
+          fi
+
+          if [ -z "$MESSAGE" ]; then
+            MESSAGE="No commit message"
+          fi
+
+          TEXT="
+          📁 Repo: [${REPO}]
+          🌿 Branch: [${BRANCH}]
+          📌 Event: [${EVENT_NAME}]
+          👤 Actor: [${ACTOR}]
+          📝 Message: ${MESSAGE}
+          "
+
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-          --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID}" \
-          --data-urlencode "text=${Text}" \
-          -d "parse_mode=Markdown"
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${TEXT}" \
+            -d "parse_mode=Markdown"
